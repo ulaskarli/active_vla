@@ -24,10 +24,12 @@ class RobotEnv:
         robot: Robot,
         control_rate_hz: float = 100.0,
         camera_dict: Optional[Dict[str, CameraDriver]] = None,
+        pass_sleep: bool = False,
     ) -> None:
         self._robot = robot
         self._rate = Rate(control_rate_hz)
         self._camera_dict = {} if camera_dict is None else camera_dict
+        self._pass_sleep = pass_sleep
 
     def robot(self) -> Robot:
         """Get the robot object.
@@ -54,7 +56,8 @@ class RobotEnv:
         ), f"input:{len(joints)}, robot:{self._robot.num_dofs()}"
         assert self._robot.num_dofs() == len(joints)
         self._robot.command_joint_state(joints)
-        self._rate.sleep()
+        if not self._pass_sleep:
+            self._rate.sleep()
         return self.get_obs()
 
     def get_obs(self) -> Dict[str, Any]:

@@ -14,6 +14,7 @@ from gello.data_utils.format_obs import save_frame
 from gello.env import RobotEnv
 from gello.robots.robot import PrintRobot
 from gello.zmq_core.robot_node import ZMQClientRobot
+from gello.zmq_core.camera_node import ZMQClientCamera
 
 
 def print_color(*args, color=None, attrs=(), **kwargs):
@@ -32,7 +33,7 @@ class Args:
     base_camera_port: int = 5001
     hostname: str = "127.0.0.1"
     robot_type: str = None  # only needed for quest agent or spacemouse agent
-    hz: int = 100
+    hz: int = 30#100
     start_joints: Optional[Tuple[float, ...]] = None
 
     gello_port: Optional[str] = None
@@ -50,8 +51,8 @@ def main(args):
     else:
         camera_clients = {
             # you can optionally add camera nodes here for imitation learning purposes
-            # "wrist": ZMQClientCamera(port=args.wrist_camera_port, host=args.hostname),
-            # "base": ZMQClientCamera(port=args.base_camera_port, host=args.hostname),
+            "wrist": ZMQClientCamera(port=args.wrist_camera_port, host=args.hostname),
+            "base": ZMQClientCamera(port=args.base_camera_port, host=args.hostname),
         }
         robot_client = ZMQClientRobot(port=args.robot_port, host=args.hostname)
     env = RobotEnv(robot_client, control_rate_hz=args.hz, camera_dict=camera_clients)

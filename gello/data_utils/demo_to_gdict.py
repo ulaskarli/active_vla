@@ -136,9 +136,10 @@ def convert_single_demo(
         curr_ts_wrapped = dict()
         curr_ts_wrapped[f"traj_{i}"] = curr_ts
         demo_stack = [curr_ts_wrapped] + demo_stack
-
+    # print("HERE ULAS")
     demo_dict = DictArray.stack(demo_stack)
     GDict.to_hdf5(demo_dict, os.path.join(traj_output_dir + "", f"traj_{i}.h5"))
+    # print("HERE ULAS")
 
     ## save the base videos
     # save the base rgb and depth videos
